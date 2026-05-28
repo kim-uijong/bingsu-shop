@@ -3,9 +3,9 @@ import { hermes } from '@granite-js/plugin-hermes';
 import { defineConfig } from '@granite-js/react-native/config';
 import { appsInToss } from '@apps-in-toss/framework/plugins';
 
-// 토스 공식 예시 그대로 모든 옵션 적용.
-// bridgeColorMode + navigationBar (withBackButton/withHomeButton/initialAccessoryButton)
-// SDK 2.6.0 typia 검증 통과 여부 빌드로 확인.
+// 토스 공식 예시 적용. initialAccessoryButton은 (선택사항)이라 제외.
+// 컬러 빙수 아이콘은 brand.icon 으로 이미 사용 중이며, 액세서리 버튼은
+// 모노톤 아이콘만 지원해 빙수 아이콘 적용 불가.
 
 export default defineConfig({
   appName: 'bingsu-shop',
@@ -29,13 +29,6 @@ export default defineConfig({
       navigationBar: {
         withBackButton: true,
         withHomeButton: true,
-        initialAccessoryButton: {
-          icon: {
-            name: 'icon-heart-mono',
-          },
-          id: 'heart',
-          title: '하트',
-        },
       },
     }),
   ],
