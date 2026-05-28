@@ -5,8 +5,8 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BG_DEFAULT } from '../constants/bingsus';
 

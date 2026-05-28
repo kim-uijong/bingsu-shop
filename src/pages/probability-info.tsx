@@ -4,8 +4,8 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   BINGSU_LIST,
   TIER_LABELS,

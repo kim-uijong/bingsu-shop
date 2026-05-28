@@ -5,8 +5,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { DailyCounter } from '../components/DailyCounter';
 import { DailyGiftCard } from '../components/DailyGiftCard';

@@ -5,8 +5,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { generateBingsu } from '../utils/bingsu';
 import { BINGSU_LIST, TIER_LABELS } from '../constants/bingsus';

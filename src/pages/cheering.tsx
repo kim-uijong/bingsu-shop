@@ -5,9 +5,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { useGrantReward } from '../hooks/useGrantReward';
 import { BingsuDisplay } from '../components/BingsuDisplay';

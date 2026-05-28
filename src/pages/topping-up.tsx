@@ -5,9 +5,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { useFullScreenAd } from '../hooks/useFullScreenAd';
 import { BingsuDisplay, type BingsuState } from '../components/BingsuDisplay';
