@@ -1,0 +1,30 @@
+diff --git a/node_modules/@apps-in-toss/plugin-compat/dist/index.cjs b/node_modules/@apps-in-toss/plugin-compat/dist/index.cjs
+index 064ad86..e927619 100644
+--- a/node_modules/@apps-in-toss/plugin-compat/dist/index.cjs
++++ b/node_modules/@apps-in-toss/plugin-compat/dist/index.cjs
+@@ -1120,8 +1120,8 @@ function getReactCompatibilityByReactNativeVersion(reactNativeVersion) {
+   }
+ }
+ function getReactCompatScript() {
+-  const reactUsePolyfillPath = require.resolve("react18-use");
+-  const reactEffectEventPolyfillPath = require.resolve("use-effect-event");
++  const reactUsePolyfillPath = require.resolve("react18-use").replace(/\\/g, "/");
++  const reactEffectEventPolyfillPath = require.resolve("use-effect-event").replace(/\\/g, "/");
+   return `
+     const React = require('react');
+     const reactUsePolyfill = require('${reactUsePolyfillPath}');
+diff --git a/node_modules/@apps-in-toss/plugin-compat/dist/index.js b/node_modules/@apps-in-toss/plugin-compat/dist/index.js
+index d8ee403..94ccd50 100644
+--- a/node_modules/@apps-in-toss/plugin-compat/dist/index.js
++++ b/node_modules/@apps-in-toss/plugin-compat/dist/index.js
+@@ -1091,8 +1091,8 @@ function getReactCompatibilityByReactNativeVersion(reactNativeVersion) {
+   }
+ }
+ function getReactCompatScript() {
+-  const reactUsePolyfillPath = __require.resolve("react18-use");
+-  const reactEffectEventPolyfillPath = __require.resolve("use-effect-event");
++  const reactUsePolyfillPath = __require.resolve("react18-use").replace(/\\/g, "/");
++  const reactEffectEventPolyfillPath = __require.resolve("use-effect-event").replace(/\\/g, "/");
+   return `
+     const React = require('react');
+     const reactUsePolyfill = require('${reactUsePolyfillPath}');

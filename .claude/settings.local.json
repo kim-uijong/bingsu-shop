@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT_CODE=$?\")",
+      "Bash(npx jest *)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(npx ait *)",
+      "Bash(node -e ' *)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(cygpath -w /tmp/remote-img)",
+      "Bash(cygpath -m /tmp/remote-img)",
+      "Bash(cp /tmp/remote-img/empty-bowl.png img/empty-bowl.png)",
+      "WebSearch",
+      "WebFetch(domain:developers-apps-in-toss.toss.im)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(npx @apps-in-toss/cli build)",
+      "Bash(npm run *)",
+      "Bash(rm -rf .granite dist)",
+      "Bash(rm -f bingsu-shop.ait)",
+      "WebFetch(domain:techchat-apps-in-toss.toss.im)",
+      "Bash(gh api *)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s \"https://api.github.com/repos/toss/apps-in-toss-examples/contents/examples\")",
+      "Bash(curl *)",
+      "Bash(grep -oE \"__appsInToss=\\\\{[^}]*\\\\}[^,\\)]*\" .granite/.apps-in-toss.env.js)",
+      "Bash(npm install *)",
+      "Bash(cp -r src src.backup)",
+      "Bash(cp -r pages pages.backup)",
+      "Bash(rm -rf src pages)",
+      "Bash(mv src.backup src)",
+      "Bash(mv pages.backup pages)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
