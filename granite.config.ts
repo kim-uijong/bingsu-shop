@@ -16,9 +16,9 @@ export default defineConfig({
     router(),
     hermes(),
     appsInToss({
-      // appType 'partner' 시도 결과 — SDK 2.6.0 typia 검증이 strict로 거부
-      // ("플러그인 옵션이 올바르지 않습니다"). 'general' | 'game'만 허용.
-      // → minimal plugin 형태 유지. 친구 strawberry-farm-share/app 형식과 동일.
+      // SDK 2.6.1에서 'partner' 재시도. 이전 2.6.0에서는 typia 거부했지만
+      // 패치 버전에서 검증 로직 완화됐을 가능성 검증.
+      appType: 'partner' as 'general',
       brand: {
         // ⚠️ 콘솔 '앱 정보 등록'에 제출된 이름과 정확히 일치해야 함
         displayName: '빙수만들고 포인트 받기',
