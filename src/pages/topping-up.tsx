@@ -48,14 +48,8 @@ function ToppingUpScreen() {
 
   async function handleAddTopping() {
     if (processingRef.current) return; // 더블탭 차단
-    if (ad.status === 'failed') {
-      ad.reload();
-      return;
-    }
-    if (ad.status !== 'ready') {
-      Alert.alert('잠시만 기다려주세요', '광고를 준비 중이에요.');
-      return;
-    }
+    if (ad.status === 'loading' || ad.status === 'showing') return;
+
     processingRef.current = true;
     try {
       const result = await ad.show();
@@ -71,8 +65,8 @@ function ToppingUpScreen() {
 
   const isBusy = ad.status === 'loading' || ad.status === 'showing';
   const buttonLabel =
-    ad.status === 'ready'   ? '🥄 토핑 더 올리기'
-    : ad.status === 'failed' ? '🔄 광고 다시 불러오기'
+    ad.status === 'idle'    ? '🥄 토핑 더 올리기'
+    : ad.status === 'failed' ? '🔄 다시 시도'
     : '광고 준비 중...';
 
   return (
