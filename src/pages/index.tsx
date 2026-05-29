@@ -1,5 +1,6 @@
 import { createRoute, IOScrollView } from '@granite-js/react-native';
-import React, { useState } from 'react';
+import { useTopNavigation } from '@apps-in-toss/framework';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -25,8 +26,30 @@ function MainScreen() {
   const navigation = Route.useNavigation();
   const { state, claimDailyGift, isFirstLaunch, dismissIntro } = useGame();
   const [giftModalVisible, setGiftModalVisible] = useState(false);
+  const { addAccessoryButton, removeAccessoryButton } = useTopNavigation();
 
   const isDailyComplete = state.todayBingsuCount >= MAX_BINGSU;
+
+  // useTopNavigation 동적 액세서리 버튼 추가 시도.
+  // 헤더 우측 영역 활성화 트리거가 될 수 있는지 검증 목적.
+  // 가이드(/bedrock/reference/framework/UI/NavigationBar)의 RN 예제 그대로 적용.
+  useEffect(() => {
+    try {
+      addAccessoryButton({
+        id: 'bingsu-info',
+        title: '빙수 안내',
+        icon: { name: 'icon-heart-mono' },
+        onPress: () => {
+          navigation.navigate('/probability-info');
+        },
+      });
+    } catch {
+      // 호스트가 비활성 상태면 silent
+    }
+    return () => {
+      try { removeAccessoryButton(); } catch {}
+    };
+  }, [addAccessoryButton, removeAccessoryButton, navigation]);
 
   function handleDailyGift() {
     setGiftModalVisible(true);
