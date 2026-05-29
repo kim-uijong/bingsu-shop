@@ -51,15 +51,8 @@ function IceCrushingScreen() {
 
   async function handleCrush() {
     if (processingRef.current) return; // 더블탭 차단
-    if (ad.status === 'failed') {
-      // 갇혀 있던 실패 상태 — 사용자가 직접 재시도
-      ad.reload();
-      return;
-    }
-    if (ad.status !== 'ready') {
-      Alert.alert('잠시만 기다려주세요', '광고를 준비 중이에요.');
-      return;
-    }
+    if (ad.status === 'loading' || ad.status === 'showing') return;
+
     processingRef.current = true;
     try {
       const result = await ad.show();
@@ -75,8 +68,8 @@ function IceCrushingScreen() {
 
   const isBusy = ad.status === 'loading' || ad.status === 'showing';
   const buttonLabel =
-    ad.status === 'ready'   ? '🧊 얼음 더 갈기'
-    : ad.status === 'failed' ? '🔄 광고 다시 불러오기'
+    ad.status === 'idle'    ? '🧊 얼음 더 갈기'
+    : ad.status === 'failed' ? '🔄 다시 시도'
     : '광고 준비 중...';
 
   return (

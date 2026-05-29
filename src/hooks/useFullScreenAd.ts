@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { loadFullScreenAd, showFullScreenAd } from '@apps-in-toss/framework';
 import { AD_GROUP_IDS } from '../constants/adConfig';
 
-type AdStatus = 'idle' | 'loading' | 'ready' | 'showing' | 'failed';
+// 친구 strawberry-farm-share/app/src/utils/ads.ts 패턴 적용.
+// 이전: 마운트 시 pre-load → show 호출 시 ready 상태 체크 후 표시.
+//   문제: iOS에서 여러 화면(DailyGiftModal, ice-crushing, topping-up)의
+//   useFullScreenAd 인스턴스가 동시에 pre-load → 광고 SDK 충돌 → 출석체크
+//   광고가 안 뜨는 현상 발생.
+// 현재: 마운트 시 pre-load 제거. show() 호출 시점에 load → show 순차 진행.
+//   1~2초 추가 대기 시간은 'loading' 상태로 UI 표시.
+
+type AdStatus = 'idle' | 'loading' | 'showing' | 'failed';
 
 interface UseFullScreenAdResult {
   status: AdStatus;
@@ -11,117 +19,95 @@ interface UseFullScreenAdResult {
   reload: () => void;
 }
 
-// 전면 광고 로드 → 표시 → 다음 광고 미리 로드 패턴
+function loadAdAsync(adGroupId: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let unregister: (() => void) | undefined;
+    const finish = (fn: () => void) => {
+      if (settled) return;
+      settled = true;
+      try { unregister?.(); } catch {}
+      fn();
+    };
+    unregister = loadFullScreenAd({
+      options: { adGroupId },
+      onEvent: (e) => {
+        if (e.type === 'loaded') finish(resolve);
+      },
+      onError: () => finish(() => reject(new Error('load-failed'))),
+    });
+  });
+}
+
+function showAdAsync(adGroupId: string): Promise<'dismissed' | 'failed'> {
+  return new Promise((resolve) => {
+    let settled = false;
+    let unregister: (() => void) | undefined;
+    const finish = (v: 'dismissed' | 'failed') => {
+      if (settled) return;
+      settled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      try { unregister?.(); } catch {}
+      resolve(v);
+    };
+
+    // 30초 안전 타임아웃 — 광고 응답이 없으면 실패로 처리해 UI 멈춤 방지.
+    const timeoutId = setTimeout(() => finish('failed'), 30000);
+
+    unregister = showFullScreenAd({
+      options: { adGroupId },
+      onEvent: (e) => {
+        if (e.type === 'dismissed') finish('dismissed');
+        else if (e.type === 'failedToShow') finish('failed');
+      },
+      onError: () => finish('failed'),
+    });
+  });
+}
+
 export function useFullScreenAd(adGroupId: string = AD_GROUP_IDS.fullScreen): UseFullScreenAdResult {
   const [status, setStatus] = useState<AdStatus>('idle');
-  const statusRef = useRef<AdStatus>('idle');
-  const unregisterRef = useRef<(() => void) | null>(null);
   const isMountedRef = useRef(true);
-  const isSupported = loadFullScreenAd.isSupported();
+  const isSupported = loadFullScreenAd.isSupported() && showFullScreenAd.isSupported();
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const setStatusSafe = useCallback((s: AdStatus) => {
-    statusRef.current = s;
     if (isMountedRef.current) setStatus(s);
   }, []);
 
-  const load = useCallback(() => {
+  const show = useCallback(async (): Promise<'dismissed' | 'failed'> => {
     if (!isSupported) {
       setStatusSafe('failed');
-      return;
+      return 'failed';
     }
-    // 이미 로딩 중이거나 준비됐으면 중복 호출 방지
-    if (statusRef.current === 'loading' || statusRef.current === 'ready' || statusRef.current === 'showing') {
-      return;
-    }
-    // 기존 등록 정리 후 다시 load
-    try { unregisterRef.current?.(); } catch {}
-    unregisterRef.current = null;
 
     setStatusSafe('loading');
-    unregisterRef.current = loadFullScreenAd({
-      options: { adGroupId },
-      onEvent: event => {
-        if (event.type === 'loaded') {
-          setStatusSafe('ready');
-        }
-      },
-      onError: () => {
-        setStatusSafe('failed');
-      },
-    });
+    try {
+      await loadAdAsync(adGroupId);
+    } catch {
+      setStatusSafe('failed');
+      return 'failed';
+    }
+
+    if (!isMountedRef.current) return 'failed';
+    setStatusSafe('showing');
+
+    const result = await showAdAsync(adGroupId);
+    setStatusSafe(result === 'dismissed' ? 'idle' : 'failed');
+    return result;
   }, [adGroupId, isSupported, setStatusSafe]);
 
-  // 마운트 시 한 번 로드. 언마운트 시 등록 해제.
-  useEffect(() => {
-    isMountedRef.current = true;
-    load();
-    return () => {
-      isMountedRef.current = false;
-      try { unregisterRef.current?.(); } catch {}
-      unregisterRef.current = null;
-    };
-  }, [load]);
-
-  // failed 상태로 갇히지 않도록 자동 재시도 (3초 후 1회)
-  useEffect(() => {
-    if (status !== 'failed' || !isSupported) return;
-    const t = setTimeout(() => {
-      // 그 사이 상태가 바뀌었으면 무시
-      if (statusRef.current === 'failed') load();
-    }, 3000);
-    return () => clearTimeout(t);
-  }, [status, isSupported, load]);
-
+  // 'failed' 상태에서 다시 시도하고 싶을 때 idle로 초기화.
+  // show() 호출 시 내부에서 load+show를 다시 진행하므로 별도 load 호출 불필요.
   const reload = useCallback(() => {
-    // 'showing' 중이면 무시, 그 외 상태에선 강제 reload
-    if (statusRef.current === 'showing') return;
     setStatusSafe('idle');
-    load();
-  }, [load, setStatusSafe]);
-
-  const show = useCallback((): Promise<'dismissed' | 'failed'> => {
-    return new Promise(resolve => {
-      if (!isSupported || statusRef.current !== 'ready') {
-        resolve('failed');
-        return;
-      }
-      setStatusSafe('showing');
-
-      let resolved = false;
-      let unregister: (() => void) | null = null;
-      const safeResolve = (v: 'dismissed' | 'failed') => {
-        if (resolved) return;
-        resolved = true;
-        if (timeoutId) clearTimeout(timeoutId);
-        try { unregister?.(); } catch {}
-        resolve(v);
-      };
-
-      // 30초 안전 타임아웃 — 광고 응답이 없으면 실패로 처리해 UI 멈춤 방지
-      const timeoutId = setTimeout(() => {
-        setStatusSafe('failed');
-        safeResolve('failed');
-      }, 30000);
-
-      unregister = showFullScreenAd({
-        options: { adGroupId },
-        onEvent: event => {
-          if (event.type === 'dismissed') {
-            setStatusSafe('idle');
-            load();
-            safeResolve('dismissed');
-          } else if (event.type === 'failedToShow') {
-            setStatusSafe('failed');
-            safeResolve('failed');
-          }
-        },
-        onError: () => {
-          setStatusSafe('failed');
-          safeResolve('failed');
-        },
-      });
-    });
-  }, [adGroupId, isSupported, load, setStatusSafe]);
+  }, [setStatusSafe]);
 
   return { status, isSupported, show, reload };
 }

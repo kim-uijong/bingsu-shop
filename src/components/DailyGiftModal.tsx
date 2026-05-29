@@ -71,13 +71,13 @@ export function DailyGiftModal({ visible, onClose, onClaimed }: Props) {
               <Text style={styles.subtitle}>매일 한번 광고를 보고 포인트 받아요</Text>
               <TouchableOpacity
                 style={[styles.primaryBtn, (ad.status === 'loading' || !ad.isSupported) && styles.btnDisabled]}
-                onPress={ad.status === 'failed' ? ad.reload : handleOpen}
+                onPress={handleOpen}
                 disabled={!ad.isSupported || ad.status === 'loading' || ad.status === 'showing'}
                 activeOpacity={0.85}
               >
                 <Text style={styles.primaryBtnText}>
-                  {ad.status === 'ready'   ? '🎁 선물 열기'
-                  : ad.status === 'failed'  ? '🔄 광고 다시 불러오기'
+                  {ad.status === 'idle'    ? '🎁 선물 열기'
+                  : ad.status === 'failed'  ? '🔄 다시 시도'
                   : '광고 준비 중...'}
                 </Text>
               </TouchableOpacity>
@@ -90,7 +90,7 @@ export function DailyGiftModal({ visible, onClose, onClaimed }: Props) {
           {phase === 'ad' && (
             <>
               <ActivityIndicator size="large" color="#00C4FF" />
-              <Text style={styles.title}>광고 표시 중...</Text>
+              <Text style={styles.title}>광고 준비 중...</Text>
               <Text style={styles.subtitle}>잠시만 기다려주세요</Text>
             </>
           )}
@@ -114,14 +114,12 @@ export function DailyGiftModal({ visible, onClose, onClaimed }: Props) {
               <Text style={styles.errorText}>{errorMsg}</Text>
               <TouchableOpacity
                 style={[styles.primaryBtn, (ad.status === 'loading' || !ad.isSupported) && styles.btnDisabled]}
-                onPress={ad.status === 'failed' ? ad.reload : handleOpen}
+                onPress={handleOpen}
                 disabled={!ad.isSupported || ad.status === 'loading' || ad.status === 'showing'}
                 activeOpacity={0.85}
               >
                 <Text style={styles.primaryBtnText}>
-                  {ad.status === 'ready'   ? '🔄 다시 시도'
-                  : ad.status === 'failed'  ? '🔄 광고 다시 불러오기'
-                  : '광고 준비 중...'}
+                  {(ad.status === 'idle' || ad.status === 'failed') ? '🔄 다시 시도' : '광고 준비 중...'}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleClose} style={styles.secondaryBtn}>
