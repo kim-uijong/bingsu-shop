@@ -71,10 +71,6 @@ function ToppingUpScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>🥄 토핑 올리는 중... 🥄</Text>
-      </View>
-
       <View style={styles.content}>
         <View style={styles.bingsuWrap}>
           <BingsuDisplay type={bingsu.type} state={visualState} size={200} />
@@ -107,18 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BOWL_ILLUSTRATION_BG,
   },
-  header: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#202632',
-  },
   content: {
     flex: 1,
     paddingHorizontal: 24,
@@ -150,7 +134,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     marginTop: 'auto',
-    marginBottom: 24,
+    marginBottom: 56,
   },
   btnDisabled: {
     backgroundColor: '#B0E5F5',

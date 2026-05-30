@@ -3,6 +3,7 @@
 import { Route as _BingsuArrivalRoute } from '../pages/bingsu-arrival';
 import { Route as _CheeringRoute } from '../pages/cheering';
 import { Route as _DailyCompleteRoute } from '../pages/daily-complete';
+import { Route as _DailyGiftRoute } from '../pages/daily-gift';
 import { Route as _IceCrushingRoute } from '../pages/ice-crushing';
 import { Route as _IndexRoute } from '../pages/';
 import { Route as _PolicyRoute } from '../pages/policy';
@@ -14,6 +15,7 @@ declare module '@granite-js/react-native' {
     '/bingsu-arrival': (typeof _BingsuArrivalRoute)['_inputType'];
     '/cheering': (typeof _CheeringRoute)['_inputType'];
     '/daily-complete': (typeof _DailyCompleteRoute)['_inputType'];
+    '/daily-gift': (typeof _DailyGiftRoute)['_inputType'];
     '/ice-crushing': (typeof _IceCrushingRoute)['_inputType'];
     '/': (typeof _IndexRoute)['_inputType'];
     '/policy': (typeof _PolicyRoute)['_inputType'];
@@ -25,6 +27,7 @@ declare module '@granite-js/react-native' {
     '/bingsu-arrival': (typeof _BingsuArrivalRoute)['_outputType'];
     '/cheering': (typeof _CheeringRoute)['_outputType'];
     '/daily-complete': (typeof _DailyCompleteRoute)['_outputType'];
+    '/daily-gift': (typeof _DailyGiftRoute)['_outputType'];
     '/ice-crushing': (typeof _IceCrushingRoute)['_outputType'];
     '/': (typeof _IndexRoute)['_outputType'];
     '/policy': (typeof _PolicyRoute)['_outputType'];

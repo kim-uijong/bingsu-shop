@@ -1,5 +1,5 @@
 import { createRoute, IOScrollView } from '@granite-js/react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { DailyCounter } from '../components/DailyCounter';
 import { DailyGiftCard } from '../components/DailyGiftCard';
-import { DailyGiftModal } from '../components/DailyGiftModal';
 import { IntroModal } from '../components/IntroModal';
 import { BannerAd } from '../components/BannerAd';
 import { BG_DEFAULT } from '../constants/bingsus';
@@ -23,17 +22,14 @@ const MAX_BINGSU = 10;
 
 function MainScreen() {
   const navigation = Route.useNavigation();
-  const { state, claimDailyGift, isFirstLaunch, dismissIntro } = useGame();
-  const [giftModalVisible, setGiftModalVisible] = useState(false);
+  const { state, isFirstLaunch, dismissIntro } = useGame();
 
   const isDailyComplete = state.todayBingsuCount >= MAX_BINGSU;
 
   function handleDailyGift() {
-    setGiftModalVisible(true);
-  }
-
-  function handleGiftClaimed(amount: number) {
-    claimDailyGift(amount);
+    // 전체화면 출석 선물 라우트로 이동.
+    // (Modal 위에서 전면 광고를 띄우면 iOS에서 멈추므로 라우트로 분리)
+    navigation.navigate('/daily-gift');
   }
 
   function handleStartBingsu() {
@@ -58,13 +54,6 @@ function MainScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.lifetimeCard}>
-          <Text style={styles.lifetimeLabel}>💰 지금까지 받은 포인트</Text>
-          <Text style={styles.lifetimeAmount}>
-            {state.lifetimeTotalPoints.toLocaleString()}원
-          </Text>
-        </View>
-
         <DailyGiftCard claimed={state.todayGiftClaimed} onPress={handleDailyGift} />
 
         <View style={styles.centerSection}>
@@ -92,6 +81,13 @@ function MainScreen() {
           totalPoints={state.todayTotalPoints}
         />
 
+        <View style={styles.lifetimeCard}>
+          <Text style={styles.lifetimeLabel}>💰 지금까지 받은 포인트</Text>
+          <Text style={styles.lifetimeAmount}>
+            {state.lifetimeTotalPoints.toLocaleString()}원
+          </Text>
+        </View>
+
         <TouchableOpacity
           style={styles.infoButton}
           onPress={handleProbabilityInfo}
@@ -113,12 +109,6 @@ function MainScreen() {
         <BannerAd />
       </IOScrollView>
 
-      <DailyGiftModal
-        visible={giftModalVisible}
-        onClose={() => setGiftModalVisible(false)}
-        onClaimed={handleGiftClaimed}
-      />
-
       <IntroModal visible={isFirstLaunch} onClose={dismissIntro} />
     </SafeAreaView>
   );
@@ -134,33 +124,34 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    gap: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+    gap: 14,
   },
   lifetimeCard: {
-    backgroundColor: '#EEF7FF',
-    borderRadius: 14,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#EEF7FF',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
     borderWidth: 1.5,
     borderColor: '#B3DDFB',
   },
   lifetimeLabel: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#5A7A99',
     fontWeight: '600',
-    marginBottom: 4,
   },
   lifetimeAmount: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: '800',
     color: '#0A6BBF',
   },
   centerSection: {
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
   },
   todayLabel: {
     fontSize: 20,

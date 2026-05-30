@@ -65,9 +65,6 @@ function BingsuArrivalScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>🧊 빙수 등장! 🧊</Text>
-      </View>
 
       <View style={styles.content}>
         <BingsuDisplay type={bingsu.type} state="empty" size={220} />
@@ -96,18 +93,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: BOWL_ILLUSTRATION_BG,
-  },
-  header: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#202632',
   },
   content: {
     flex: 1,

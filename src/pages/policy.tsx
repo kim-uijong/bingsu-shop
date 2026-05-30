@@ -22,10 +22,6 @@ function PolicyScreen() {
   // 자체 ← 뒤로가기는 동시에 보여서는 안 됨 → 자체 헤더는 제목만 표시.
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>이용 안내</Text>
-      </View>
-
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -112,18 +108,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: BG_DEFAULT,
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#202632',
   },
   scroll: {
     flex: 1,

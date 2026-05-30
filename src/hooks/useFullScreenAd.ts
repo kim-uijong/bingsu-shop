@@ -26,16 +26,29 @@ function loadAdAsync(adGroupId: string): Promise<void> {
     const finish = (fn: () => void) => {
       if (settled) return;
       settled = true;
+      if (timeoutId) clearTimeout(timeoutId);
       try { unregister?.(); } catch {}
       fn();
     };
-    unregister = loadFullScreenAd({
-      options: { adGroupId },
-      onEvent: (e) => {
-        if (e.type === 'loaded') finish(resolve);
-      },
-      onError: () => finish(() => reject(new Error('load-failed'))),
-    });
+
+    // 15초 로드 타임아웃 — iOS에서 광고 fill이 없을 때 'loaded'/onError가
+    // 모두 호출되지 않아 "광고 표시 중..."에 무한 대기하는 현상을 방지.
+    const timeoutId = setTimeout(
+      () => finish(() => reject(new Error('load-timeout'))),
+      15000
+    );
+
+    try {
+      unregister = loadFullScreenAd({
+        options: { adGroupId },
+        onEvent: (e) => {
+          if (e.type === 'loaded') finish(resolve);
+        },
+        onError: () => finish(() => reject(new Error('load-failed'))),
+      });
+    } catch {
+      finish(() => reject(new Error('load-throw')));
+    }
   });
 }
 
@@ -54,14 +67,18 @@ function showAdAsync(adGroupId: string): Promise<'dismissed' | 'failed'> {
     // 30초 안전 타임아웃 — 광고 응답이 없으면 실패로 처리해 UI 멈춤 방지.
     const timeoutId = setTimeout(() => finish('failed'), 30000);
 
-    unregister = showFullScreenAd({
-      options: { adGroupId },
-      onEvent: (e) => {
-        if (e.type === 'dismissed') finish('dismissed');
-        else if (e.type === 'failedToShow') finish('failed');
-      },
-      onError: () => finish('failed'),
-    });
+    try {
+      unregister = showFullScreenAd({
+        options: { adGroupId },
+        onEvent: (e) => {
+          if (e.type === 'dismissed') finish('dismissed');
+          else if (e.type === 'failedToShow') finish('failed');
+        },
+        onError: () => finish('failed'),
+      });
+    } catch {
+      finish('failed');
+    }
   });
 }
 

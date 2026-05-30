@@ -111,10 +111,6 @@ function CheeringScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: bg }]}>
       <SpecialBingsuOverlay type={bingsu.type}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>✨ 완성! ✨</Text>
-        </View>
-
         <View style={styles.content}>
           <View style={styles.illustrationWrap}>
             <BingsuDisplay type={bingsu.type} state="complete" size={300} />
@@ -181,16 +177,6 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     // backgroundColor는 인라인으로 빙수별 색 주입
-  },
-  header: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#202632',
   },
   content: {
     flex: 1,

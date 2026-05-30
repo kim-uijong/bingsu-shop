@@ -29,11 +29,6 @@ export interface GameState {
   lifetimeMaxReward: number;
   lifetimeTotalPoints: number; // 누적 받은 토스 포인트 (출석 선물 + 빙수 합계)
   /**
-   * 출석 선물의 grant client ID. 클레임 시 today 날짜 문자열을 저장하고,
-   * 재진입 시 같은 ID면 이미 지급된 것으로 간주.
-   */
-  dailyGiftGrantedId: string | null;
-  /**
    * 마지막으로 grant 성공한 빙수의 grantClientId.
    * cheering 화면 재진입 시 같은 ID면 done 상태로 직행해 재호출 방지.
    */
@@ -51,7 +46,6 @@ const INITIAL_STATE: GameState = {
   lifetimeBingsus: 0,
   lifetimeMaxReward: 0,
   lifetimeTotalPoints: 0,
-  dailyGiftGrantedId: null,
   lastGrantedBingsuId: null,
 };
 
@@ -149,7 +143,6 @@ export function useGameState() {
       todayTotalPoints: prev.todayTotalPoints + amount,
       lifetimeMaxReward: Math.max(prev.lifetimeMaxReward, amount),
       lifetimeTotalPoints: prev.lifetimeTotalPoints + amount,
-      dailyGiftGrantedId: prev.lastPlayDate, // 오늘 날짜를 dedup 키로 사용
     }));
   }, []);
 

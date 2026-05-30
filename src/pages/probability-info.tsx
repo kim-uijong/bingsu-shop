@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +16,8 @@ import {
 import { TIER_MIN, TIER_MAX } from '../constants/probabilities';
 import { BG_DEFAULT } from '../constants/bingsus';
 import { BannerAd } from '../components/BannerAd';
+
+const THUMBNAIL_URL = 'https://raw.githubusercontent.com/kim-uijong/bingsu-asset/main/thumbnail.png';
 
 export const Route = createRoute('/probability-info', {
   component: ProbabilityInfoScreen,
@@ -38,15 +41,22 @@ function ProbabilityInfoScreen() {
   // 자체 ← 뒤로가기는 동시에 보여서는 안 됨 → 자체 헤더는 제목만 표시.
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>빙수 안내</Text>
-      </View>
-
       <IOScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* 환영 배너 — 이전 IntroModal 컨텐츠 통합 */}
+        <View style={styles.welcomeBox}>
+          <Image source={{ uri: THUMBNAIL_URL }} style={styles.welcomeImage} resizeMode="contain" />
+          <Text style={styles.welcomeTitle}>
+            빙수만들고 포인트 받기에{'\n'}오신 것을 환영해요!
+          </Text>
+          <Text style={styles.welcomeSubtitle}>
+            매일 다른 빙수를 만들어요{'\n'}최대 1,000원까지 받아요
+          </Text>
+        </View>
+
         {/* 출석 선물 */}
         <Section title="🎁 출석 선물">
           <Text style={styles.body}>매일 한번 광고를 보고 포인트 받아요</Text>
@@ -119,18 +129,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BG_DEFAULT,
   },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#202632',
-  },
   scroll: {
     flex: 1,
   },
@@ -138,6 +136,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 24,
+  },
+  welcomeBox: {
+    alignItems: 'center',
+    gap: 10,
+    paddingBottom: 4,
+  },
+  welcomeImage: {
+    width: 160,
+    height: 160,
+  },
+  welcomeTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#202632',
+    textAlign: 'center',
+    lineHeight: 30,
+  },
+  welcomeSubtitle: {
+    fontSize: 15,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
   },
   section: {
     gap: 8,
