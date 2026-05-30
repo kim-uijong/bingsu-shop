@@ -54,6 +54,14 @@ function MainScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        <TouchableOpacity
+          style={styles.policyLink}
+          onPress={handlePolicy}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.policyLinkText}>이용 안내 · 고객센터</Text>
+        </TouchableOpacity>
+
         <DailyGiftCard claimed={state.todayGiftClaimed} onPress={handleDailyGift} />
 
         <View style={styles.centerSection}>
@@ -81,13 +89,6 @@ function MainScreen() {
           totalPoints={state.todayTotalPoints}
         />
 
-        <View style={styles.lifetimeCard}>
-          <Text style={styles.lifetimeLabel}>💰 지금까지 받은 포인트</Text>
-          <Text style={styles.lifetimeAmount}>
-            {state.lifetimeTotalPoints.toLocaleString()}원
-          </Text>
-        </View>
-
         <TouchableOpacity
           style={styles.infoButton}
           onPress={handleProbabilityInfo}
@@ -96,13 +97,12 @@ function MainScreen() {
           <Text style={styles.infoButtonText}>📊 빙수 안내</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.policyLink}
-          onPress={handlePolicy}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.policyLinkText}>이용 안내 · 고객센터</Text>
-        </TouchableOpacity>
+        <View style={styles.lifetimeCard}>
+          <Text style={styles.lifetimeLabel}>💰 지금까지 받은 포인트</Text>
+          <Text style={styles.lifetimeAmount}>
+            {state.lifetimeTotalPoints.toLocaleString()}원
+          </Text>
+        </View>
 
         {/* BannerAd는 InlineAd의 ImpressionArea가 IOContext를 요구하므로
             반드시 IOScrollView 내부에 둬야 함 (granite-js 규약) */}
