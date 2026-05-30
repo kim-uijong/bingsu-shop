@@ -17,10 +17,10 @@ export default defineConfig({
     appsInToss({
       // 비게임 미니앱 → 흰 배경 네비바(로고+이름+더보기+X) 활성화
       appType: 'general',
-      // 네비바에 뒤로가기 + 홈 버튼 명시적 활성화
+      // 네비바: 뒤로가기만 표시, 홈 버튼은 숨김
       navigationBar: {
         withBackButton: true,
-        withHomeButton: true,
+        withHomeButton: false,
       },
       brand: {
         // ⚠️ 콘솔 '앱 정보 등록'에 제출된 이름과 정확히 일치해야 함
