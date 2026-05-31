@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 8, // 라벨과 금액이 붙지 않도록 최소 간격 확보
     backgroundColor: '#EEF7FF',
     borderRadius: 12,
     paddingVertical: 10,
@@ -143,6 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#5A7A99',
     fontWeight: '600',
+    flexShrink: 1, // 공간 부족 시 라벨이 줄어들어 금액을 밀어내지 않음
   },
   lifetimeAmount: {
     fontSize: 20,

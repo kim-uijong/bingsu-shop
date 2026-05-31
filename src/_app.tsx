@@ -1,9 +1,19 @@
 import React, { type PropsWithChildren } from 'react';
+import { Text, TextInput } from 'react-native';
 import { type InitialProps } from '@granite-js/react-native';
 import { AppsInToss } from '@apps-in-toss/framework';
 import { context } from '../require.context';
 import { GameProvider } from './contexts/GameContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+
+// OS "글자 크기/접근성 큰 글씨" 설정에 따라 텍스트만 부풀어 고정 dp 레이아웃이
+// 밀리는(버튼·블록 위치가 깨지는) 문제 방지. 미니앱 디자인을 모든 기기에서 동일하게 유지.
+// (RN 기본값 allowFontScaling=true → 기기 글자 크기를 따라감)
+type FontScalable = { defaultProps?: { allowFontScaling?: boolean } };
+const TextDefaults = Text as unknown as FontScalable;
+TextDefaults.defaultProps = { ...TextDefaults.defaultProps, allowFontScaling: false };
+const TextInputDefaults = TextInput as unknown as FontScalable;
+TextInputDefaults.defaultProps = { ...TextInputDefaults.defaultProps, allowFontScaling: false };
 
 function AppContainer({ children }: PropsWithChildren<InitialProps>) {
   return (
