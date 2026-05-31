@@ -7,6 +7,14 @@ export type BingsuState = 'empty' | 'ice' | 'topping' | 'complete';
 // GitHub raw 호스팅 (granite는 로컬 require 미지원 — URL 방식 필수)
 const ASSET_BASE = 'https://raw.githubusercontent.com/kim-uijong/bingsu-asset/main';
 
+// 캐시버스터 — RN(Android Fresco/iOS)은 이미지를 URL 단위로 디스크 캐시한다.
+// GitHub raw URL은 이미지를 교체해도 그대로라, 한 번 캐시한 옛(잘린) 버전을 계속 재사용한다.
+// 고정 숫자(?v=2)는 그 토큰을 캐시한 시점 이미지에 다시 묶여 스테일이 반복됨 →
+// 앱 실행마다 새로 생성되는 토큰을 붙여, 새 세션이면 항상 GitHub 현재 이미지를 받아오게 한다.
+// (빙수 PNG는 개당 ~150KB, 화면당 1장만 로드 → 세션당 재요청 비용 무시 가능)
+const ASSET_VERSION = Date.now();
+const withVersion = (url: string) => `${url}?v=${ASSET_VERSION}`;
+
 // 15종 빙수 일러스트 URL
 const BINGSU_URLS: Record<BingsuType, string> = {
   patbingsu:     `${ASSET_BASE}/patbingsu.png`,
@@ -158,9 +166,8 @@ export function BingsuDisplay({ type, state, size = 260, showLabel = false }: Pr
         // 안전 여유 inset을 두어 박스 안에 머물도록 함. 다른 빙수는 콘텐츠 여백이
         // 충분해 크기 유지.
         <Animated.Image
-          // ?v=2 캐시버스터 — bingsu-asset의 blueberry 등 이미지가 갱신됐는데
-          // RN Image가 같은 URL로 옛 버전을 디스크 캐시해 잘린 이미지가 보이던 문제 해결.
-          source={{ uri: `${uri}?v=2` }}
+          // 실행마다 바뀌는 ASSET_VERSION을 붙여 디스크 캐시 스테일을 원천 차단 (위 정의 참고)
+          source={{ uri: withVersion(uri) }}
           style={{
             width: size - inset,
             height: size - inset,
