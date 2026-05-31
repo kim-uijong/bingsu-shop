@@ -1,5 +1,5 @@
 import { createRoute } from '@granite-js/react-native';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -48,6 +48,28 @@ function CheeringScreen() {
     };
   }, []);
 
+  // 이 빙수가 grant 완료(보상 지급)됐는지. 재진입(alreadyGranted) 시에도 확정 대상.
+  const grantedRef = useRef(alreadyGranted);
+  // completeBingsu 중복 호출 방지 (1회만 확정)
+  const finalizedRef = useRef(false);
+
+  // grant된 빙수를 화면 이탈 시 1회만 확정 — 카운트 증가 + currentBingsu 클리어.
+  // 뒤로가기로 나가도 "받았는데 안 끝난" 어중간한 상태가 안 남고, 옛 보상 화면 재등장 X.
+  const finalizeIfGranted = useCallback(() => {
+    if (finalizedRef.current || !grantedRef.current) return;
+    finalizedRef.current = true;
+    navigatedRef.current = true; // 확정 후 currentBingsu=null로 인한 useEffect 재네비 방지
+    completeBingsu();
+  }, [completeBingsu]);
+
+  // 뒤로가기·제스처 등 어떤 경로로든 화면을 떠날 때 grant된 빙수를 자동 확정
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      finalizeIfGranted();
+    });
+    return unsubscribe;
+  }, [navigation, finalizeIfGranted]);
+
   // 응원 메시지는 환호 진입 시 한 번만 픽 (같은 화면에서 변경되지 않게)
   const [cheerMessage] = useState(() =>
     bingsu ? getRandomCheerMessage(bingsu.type) : ''
@@ -72,6 +94,7 @@ function CheeringScreen() {
     if (!bingsu) return;
     // 중복 지급 방어: 같은 grantClientId가 이미 성공으로 기록돼 있으면 grant 호출 생략
     if (state.lastGrantedBingsuId === bingsu.grantClientId) {
+      grantedRef.current = true;
       setPhase('done');
       return;
     }
@@ -82,6 +105,7 @@ function CheeringScreen() {
       // 성공 직후 immediate mark — completeBingsu보다 먼저 호출해야
       // 사용자가 도중에 앱을 강제 종료해도 재진입 시 중복 grant가 안 됨
       markBingsuGranted(bingsu.grantClientId);
+      grantedRef.current = true;
       setPhase('done');
     } else {
       setErrorMsg(result.errorMessage ?? '보상 지급에 실패했어요');
@@ -92,7 +116,7 @@ function CheeringScreen() {
   function handleNext() {
     const willBeLast = state.todayBingsuCount + 1 >= MAX_BINGSU;
     navigatedRef.current = true;
-    completeBingsu();
+    finalizeIfGranted();
     if (willBeLast) {
       // 스택을 [메인, 완료] 두 개로 리셋 → 완료 화면에서 뒤로가기 = 메인
       navigation.reset({
