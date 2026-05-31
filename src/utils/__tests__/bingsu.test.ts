@@ -27,13 +27,13 @@ describe('generateReward — 티어별 0원 절대 X', () => {
 });
 
 describe('generateReward — 기댓값', () => {
-  // 2026-05-31 하향 후 기댓값: classic ≈2.84, fruit ≈5.33, premium ≈10.59, special ≈17.88
+  // 2026-06-01 floor 인상 후 기댓값: classic ≈2.35, fruit ≈4.33, premium ≈16.2, special ≈28.5
   // 균등 분포 가정 시 실제 값과 약간 다를 수 있어 느슨한 범위로 검증
   const EXPECTED: Record<BingsuTier, [number, number]> = {
-    classic: [2, 4],
-    fruit:   [4, 7],
-    premium: [8, 14],
-    special: [12, 26],
+    classic: [1.8, 3],
+    fruit:   [3.5, 5.2],
+    premium: [14, 19],
+    special: [24, 34],
   };
 
   for (const tier of TIERS) {
@@ -70,12 +70,15 @@ describe('pickTier — 티어 등장 확률', () => {
 });
 
 describe('generateBingsu — 통합 검증', () => {
-  it('100,000회 호출 시 reward는 항상 1 이상, special은 16 이상', () => {
+  it('100,000회 호출 시 reward는 항상 1 이상, premium 15+·special 25+', () => {
     for (let i = 0; i < 100_000; i++) {
       const b = generateBingsu();
       expect(b.reward).toBeGreaterThanOrEqual(1);
+      if (b.tier === 'premium') {
+        expect(b.reward).toBeGreaterThanOrEqual(15);
+      }
       if (b.tier === 'special') {
-        expect(b.reward).toBeGreaterThanOrEqual(6);
+        expect(b.reward).toBeGreaterThanOrEqual(25);
       }
     }
   });
@@ -89,16 +92,16 @@ describe('generateBingsu — 통합 검증', () => {
     }
   });
 
-  it('전체 회당 기댓값이 약 5원 범위 내여야 한다 (3.5~7원)', () => {
+  it('전체 회당 기댓값이 약 5.5원 범위 내여야 한다 (4.8~6.3원)', () => {
     let total = 0;
     const trials = 100_000;
     for (let i = 0; i < trials; i++) {
       total += generateBingsu().reward;
     }
     const avg = total / trials;
-    // 하향 후 목표 ≈ 5원 (균등 분포 가정으로 약간 변동)
-    expect(avg).toBeGreaterThan(3.5);
-    expect(avg).toBeLessThan(7);
+    // floor 인상 후 목표 ≈ 5.5원 (균등 분포 가정으로 약간 변동)
+    expect(avg).toBeGreaterThan(4.8);
+    expect(avg).toBeLessThan(6.3);
   });
 
   it('15종 빙수가 모두 한 번 이상 등장해야 한다 (10,000회 추첨)', () => {
