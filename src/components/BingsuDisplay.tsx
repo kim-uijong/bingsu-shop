@@ -158,7 +158,9 @@ export function BingsuDisplay({ type, state, size = 260, showLabel = false }: Pr
         // 안전 여유 inset을 두어 박스 안에 머물도록 함. 다른 빙수는 콘텐츠 여백이
         // 충분해 크기 유지.
         <Animated.Image
-          source={{ uri }}
+          // ?v=2 캐시버스터 — bingsu-asset의 blueberry 등 이미지가 갱신됐는데
+          // RN Image가 같은 URL로 옛 버전을 디스크 캐시해 잘린 이미지가 보이던 문제 해결.
+          source={{ uri: `${uri}?v=2` }}
           style={{
             width: size - inset,
             height: size - inset,
