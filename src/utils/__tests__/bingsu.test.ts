@@ -27,13 +27,13 @@ describe('generateReward — 티어별 0원 절대 X', () => {
 });
 
 describe('generateReward — 기댓값', () => {
-  // BM_DESIGN.md 기댓값: classic 5.57, fruit 10.47, premium 21.33, special 51.18
+  // 2026-05-31 하향 후 기댓값: classic ≈2.84, fruit ≈5.33, premium ≈10.59, special ≈17.88
   // 균등 분포 가정 시 실제 값과 약간 다를 수 있어 느슨한 범위로 검증
   const EXPECTED: Record<BingsuTier, [number, number]> = {
-    classic: [4, 8],
-    fruit:   [8, 14],
-    premium: [16, 30],
-    special: [40, 65],
+    classic: [2, 4],
+    fruit:   [4, 7],
+    premium: [8, 14],
+    special: [12, 26],
   };
 
   for (const tier of TIERS) {
@@ -75,7 +75,7 @@ describe('generateBingsu — 통합 검증', () => {
       const b = generateBingsu();
       expect(b.reward).toBeGreaterThanOrEqual(1);
       if (b.tier === 'special') {
-        expect(b.reward).toBeGreaterThanOrEqual(16);
+        expect(b.reward).toBeGreaterThanOrEqual(6);
       }
     }
   });
@@ -89,16 +89,16 @@ describe('generateBingsu — 통합 검증', () => {
     }
   });
 
-  it('전체 회당 기댓값이 약 10.65원 범위 내여야 한다 (8~16원)', () => {
+  it('전체 회당 기댓값이 약 5원 범위 내여야 한다 (3.5~7원)', () => {
     let total = 0;
     const trials = 100_000;
     for (let i = 0; i < trials; i++) {
       total += generateBingsu().reward;
     }
     const avg = total / trials;
-    // 균등 분포 가정으로 BM 기댓값보다 약간 높을 수 있음
-    expect(avg).toBeGreaterThan(8);
-    expect(avg).toBeLessThan(16);
+    // 하향 후 목표 ≈ 5원 (균등 분포 가정으로 약간 변동)
+    expect(avg).toBeGreaterThan(3.5);
+    expect(avg).toBeLessThan(7);
   });
 
   it('15종 빙수가 모두 한 번 이상 등장해야 한다 (10,000회 추첨)', () => {
