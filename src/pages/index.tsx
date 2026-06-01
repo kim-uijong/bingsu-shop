@@ -98,8 +98,12 @@ function MainScreen() {
         </TouchableOpacity>
 
         <View style={styles.lifetimeCard}>
-          <Text style={styles.lifetimeLabel}>💰 지금까지 받은 포인트</Text>
-          <Text style={styles.lifetimeAmount}>
+          {/* numberOfLines+adjustsFontSizeToFit: 화면이 좁아도 라벨이 줄바꿈/겹침 없이
+              한 줄로 자동 축소돼 금액과 붙지 않음 (One UI 등 넓은 폰트 기기 대응) */}
+          <Text style={styles.lifetimeLabel} numberOfLines={1} adjustsFontSizeToFit>
+            💰 지금까지 받은 포인트
+          </Text>
+          <Text style={styles.lifetimeAmount} numberOfLines={1}>
             {state.lifetimeTotalPoints.toLocaleString()}원
           </Text>
         </View>

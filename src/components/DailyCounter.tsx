@@ -13,7 +13,11 @@ export function DailyCounter({ count, totalPoints }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.iconsRow}>{icons.join('')}</Text>
+      {/* numberOfLines+adjustsFontSizeToFit: 좁은 화면에서도 10칸이 줄바꿈되지 않고
+          한 줄로 자동 축소돼, 아래 요소가 밀리지 않음 */}
+      <Text style={styles.iconsRow} numberOfLines={1} adjustsFontSizeToFit>
+        {icons.join('')}
+      </Text>
       <Text style={styles.countText}>
         오늘 빙수: {count}/{MAX_COUNT}
       </Text>
