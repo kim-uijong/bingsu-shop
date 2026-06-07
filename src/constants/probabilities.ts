@@ -4,12 +4,10 @@ import { type BingsuTier } from './bingsus';
 export const DAILY_GIFT_AMOUNT = 1;
 
 // 빙수 티어별 보상 분포
-// 2026-06-01 상위 티어 floor 인상: 황금/무지개(특별) 뽑고 10원이면 실망 → 바닥을 올림.
-//   premium 최소 15원 / special 최소 25원 보장. 전체 기댓값은 약 5.5원으로 소폭 상향.
-//   대신 흔한 빙수(classic·fruit)를 낮춰 전체 비용을 맞춤.
-//   classic ≈ 2.35 / fruit ≈ 4.33 / premium ≈ 16.2 / special ≈ 28.5
-//   전체 = 0.6×2.35 + 0.25×4.33 + 0.10×16.2 + 0.05×28.5 ≈ 5.54원
-//   special에 301~1,000원 잭팟 0.1% 포함 → 전체 잭팟 확률 ≈ 1/20,000 (0.005%)
+// 2026-06-07 전체 기댓값 6.5 → 8원으로 상향(사용자 요청). 티어 확률(60/25/10/5)은 유지.
+//   classic ≈ 5.37 / fruit ≈ 6.85 / premium ≈ 16.2 / special ≈ 28.5
+//   전체 = 0.6×5.37 + 0.25×6.85 + 0.10×16.2 + 0.05×28.5 ≈ 8.0원
+//   premium 최소 15원 / special 최소 25원 유지. special 301~1,000원 잭팟 0.1%(≈1/20,000) 유지.
 // 가중치는 % × 100 (정수 유지), 각 티어 합 10000.
 export interface RewardRange {
   min: number;
@@ -18,19 +16,21 @@ export interface RewardRange {
 }
 
 export const TIER_REWARD_DISTRIBUTIONS: Record<BingsuTier, RewardRange[]> = {
-  // 추억 빙수 (기댓값 ≈ 2.35원)
+  // 추억 빙수 (기댓값 ≈ 5.37원) — 2원 비중↓, 중상위 보상↑
   classic: [
-    { min: 2,  max: 2,  weight: 9000 }, // 90%
-    { min: 3,  max: 5,  weight: 800  }, // 8%
-    { min: 6,  max: 12, weight: 150  }, // 1.5%
-    { min: 13, max: 25, weight: 50   }, // 0.5%
+    { min: 2,  max: 2,  weight: 2900 }, // 29%
+    { min: 3,  max: 3,  weight: 2200 }, // 22%
+    { min: 4,  max: 5,  weight: 2400 }, // 24%
+    { min: 6,  max: 12, weight: 1700 }, // 17%
+    { min: 13, max: 25, weight: 800  }, // 8%
   ],
-  // 과일 빙수 (기댓값 ≈ 4.33원)
+  // 과일 빙수 (기댓값 ≈ 6.85원)
   fruit: [
-    { min: 3,  max: 3,  weight: 6500 }, // 65%
-    { min: 4,  max: 5,  weight: 2500 }, // 25%
-    { min: 6,  max: 10, weight: 800  }, // 8%
-    { min: 11, max: 50, weight: 200  }, // 2%
+    { min: 3,  max: 3,  weight: 3800 }, // 38%
+    { min: 4,  max: 5,  weight: 3000 }, // 30%
+    { min: 6,  max: 10, weight: 2000 }, // 20%
+    { min: 11, max: 25, weight: 900  }, // 9%
+    { min: 26, max: 50, weight: 300  }, // 3%
   ],
   // 프리미엄 빙수 (기댓값 ≈ 16.2원, 최소 15원 보장)
   premium: [
