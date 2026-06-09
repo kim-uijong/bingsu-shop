@@ -137,8 +137,10 @@ function CheeringScreen() {
     <SafeAreaView style={[styles.safe, { backgroundColor: bg }]}>
       <SpecialBingsuOverlay type={bingsu.type}>
         <IOScrollView contentContainerStyle={styles.content}>
+          <View style={styles.spacer} />
+
           <View style={styles.illustrationWrap}>
-            <BingsuDisplay type={bingsu.type} state="complete" size={200} />
+            <BingsuDisplay type={bingsu.type} state="complete" size={300} />
           </View>
 
           <View style={styles.infoBox}>

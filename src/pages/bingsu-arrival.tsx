@@ -69,7 +69,7 @@ function BingsuArrivalScreen() {
       <IOScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.spacer} />
         <View style={styles.group}>
-          <BingsuDisplay type={bingsu.type} state="empty" size={180} />
+          <BingsuDisplay type={bingsu.type} state="empty" size={220} />
 
           <View style={styles.infoBox}>
             <Text style={styles.tierLabel}>{tierLabel}</Text>

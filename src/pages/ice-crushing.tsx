@@ -76,9 +76,11 @@ function IceCrushingScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <IOScrollView contentContainerStyle={styles.content}>
+        <View style={styles.spacer} />
+
         <View style={styles.bingsuWrap}>
-          <BingsuDisplay type={bingsu.type} state={visualState} size={160} />
-          <IceParticles count={14} fallHeight={200} />
+          <BingsuDisplay type={bingsu.type} state={visualState} size={200} />
+          <IceParticles count={14} fallHeight={260} />
         </View>
 
         <StepBar currentStage={1} currentStep={step} totalSteps={TOTAL_STEPS} />
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
   },
   bingsuWrap: {
     width: '100%',
-    height: 200,
+    height: 260,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
