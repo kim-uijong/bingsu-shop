@@ -67,8 +67,9 @@ function BingsuArrivalScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <IOScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.content}>
-          <BingsuDisplay type={bingsu.type} state="empty" size={220} />
+        <View style={styles.spacer} />
+        <View style={styles.group}>
+          <BingsuDisplay type={bingsu.type} state="empty" size={180} />
 
           <View style={styles.infoBox}>
             <Text style={styles.tierLabel}>{tierLabel}</Text>
@@ -86,6 +87,7 @@ function BingsuArrivalScreen() {
             <Text style={styles.startButtonText}>🧊 얼음 갈기 시작</Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.spacer} />
 
         <BannerAd />
       </IOScrollView>
@@ -100,13 +102,15 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-  },
-  content: {
-    flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 24,
-    gap: 32,
+  },
+  spacer: {
+    flexGrow: 1,
+  },
+  group: {
+    alignItems: 'center',
+    gap: 28,
   },
   loadingBox: {
     flex: 1,

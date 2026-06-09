@@ -77,8 +77,8 @@ function IceCrushingScreen() {
     <SafeAreaView style={styles.safe}>
       <IOScrollView contentContainerStyle={styles.content}>
         <View style={styles.bingsuWrap}>
-          <BingsuDisplay type={bingsu.type} state={visualState} size={200} />
-          <IceParticles count={14} fallHeight={260} />
+          <BingsuDisplay type={bingsu.type} state={visualState} size={160} />
+          <IceParticles count={14} fallHeight={200} />
         </View>
 
         <StepBar currentStage={1} currentStep={step} totalSteps={TOTAL_STEPS} />
@@ -88,6 +88,8 @@ function IceCrushingScreen() {
           {step >= 1 && step < 3 && '얼음이 쌓이고 있어요'}
           {step >= 3 && step < TOTAL_STEPS && '거의 다 됐어요!'}
         </Text>
+
+        <View style={styles.spacer} />
 
         <TouchableOpacity
           style={[styles.actionButton, isBusy && styles.btnDisabled]}
@@ -112,13 +114,16 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 24,
-    gap: 24,
+    paddingTop: 12,
+    gap: 14,
     alignItems: 'center',
+  },
+  spacer: {
+    flexGrow: 1,
   },
   bingsuWrap: {
     width: '100%',
-    height: 260,
+    height: 200,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
@@ -139,7 +144,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
-    marginTop: 'auto',
     marginBottom: 8,
   },
   btnDisabled: {

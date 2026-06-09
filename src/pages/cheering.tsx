@@ -136,10 +136,9 @@ function CheeringScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: bg }]}>
       <SpecialBingsuOverlay type={bingsu.type}>
-        <IOScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.content}>
+        <IOScrollView contentContainerStyle={styles.content}>
           <View style={styles.illustrationWrap}>
-            <BingsuDisplay type={bingsu.type} state="complete" size={300} />
+            <BingsuDisplay type={bingsu.type} state="complete" size={200} />
           </View>
 
           <View style={styles.infoBox}>
@@ -148,6 +147,8 @@ function CheeringScreen() {
             </Text>
             <Text style={styles.message}>"{cheerMessage}"</Text>
           </View>
+
+          <View style={styles.spacer} />
 
           <View style={styles.actionArea}>
             {phase === 'cheering' && (
@@ -193,7 +194,6 @@ function CheeringScreen() {
               </>
             )}
           </View>
-        </View>
 
         <BannerAd />
         </IOScrollView>
@@ -207,15 +207,15 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor는 인라인으로 빙수별 색 주입
   },
-  scroll: {
-    flexGrow: 1,
-  },
   content: {
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 8,
-    paddingBottom: 24,
+    paddingBottom: 8,
     alignItems: 'center',
+  },
+  spacer: {
+    flexGrow: 1,
   },
   illustrationWrap: {
     alignItems: 'center',
@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
   actionArea: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 'auto',
     paddingBottom: 8,
   },
   grantingBox: {
