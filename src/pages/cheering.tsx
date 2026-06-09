@@ -1,4 +1,4 @@
-import { createRoute } from '@granite-js/react-native';
+import { createRoute, IOScrollView } from '@granite-js/react-native';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGame } from '../contexts/GameContext';
 import { useGrantReward } from '../hooks/useGrantReward';
 import { BingsuDisplay } from '../components/BingsuDisplay';
+import { BannerAd } from '../components/BannerAd';
 import { SpecialBingsuOverlay } from '../components/SpecialBingsuOverlay';
 import { BINGSU_LIST, ILLUSTRATION_BG, BG_DEFAULT } from '../constants/bingsus';
 import { getRandomCheerMessage } from '../utils/bingsu';
@@ -135,6 +136,7 @@ function CheeringScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: bg }]}>
       <SpecialBingsuOverlay type={bingsu.type}>
+        <IOScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.content}>
           <View style={styles.illustrationWrap}>
             <BingsuDisplay type={bingsu.type} state="complete" size={300} />
@@ -192,6 +194,9 @@ function CheeringScreen() {
             )}
           </View>
         </View>
+
+        <BannerAd />
+        </IOScrollView>
       </SpecialBingsuOverlay>
     </SafeAreaView>
   );
@@ -202,8 +207,11 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor는 인라인으로 빙수별 색 주입
   },
+  scroll: {
+    flexGrow: 1,
+  },
   content: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 24,

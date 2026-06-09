@@ -1,4 +1,4 @@
-import { createRoute } from '@granite-js/react-native';
+import { createRoute, IOScrollView } from '@granite-js/react-native';
 import React, { useEffect } from 'react';
 import {
   View,
@@ -11,6 +11,7 @@ import { useGame } from '../contexts/GameContext';
 import { generateBingsu } from '../utils/bingsu';
 import { BINGSU_LIST, TIER_LABELS } from '../constants/bingsus';
 import { BingsuDisplay } from '../components/BingsuDisplay';
+import { BannerAd } from '../components/BannerAd';
 import { BOWL_ILLUSTRATION_BG } from '../constants/bingsus';
 
 export const Route = createRoute('/bingsu-arrival', {
@@ -65,26 +66,29 @@ function BingsuArrivalScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <IOScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.content}>
+          <BingsuDisplay type={bingsu.type} state="empty" size={220} />
 
-      <View style={styles.content}>
-        <BingsuDisplay type={bingsu.type} state="empty" size={220} />
+          <View style={styles.infoBox}>
+            <Text style={styles.tierLabel}>{tierLabel}</Text>
+            <Text style={styles.bingsuName}>
+              {info?.emoji} {info?.name}
+            </Text>
+            <Text style={styles.message}>"{bingsu.message}"</Text>
+          </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.tierLabel}>{tierLabel}</Text>
-          <Text style={styles.bingsuName}>
-            {info?.emoji} {info?.name}
-          </Text>
-          <Text style={styles.message}>"{bingsu.message}"</Text>
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={handleStart}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.startButtonText}>🧊 얼음 갈기 시작</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.startButton}
-          onPress={handleStart}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.startButtonText}>🧊 얼음 갈기 시작</Text>
-        </TouchableOpacity>
-      </View>
+        <BannerAd />
+      </IOScrollView>
     </SafeAreaView>
   );
 }
@@ -94,8 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BOWL_ILLUSTRATION_BG,
   },
+  scroll: {
+    flexGrow: 1,
+  },
   content: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
