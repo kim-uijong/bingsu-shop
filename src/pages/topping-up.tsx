@@ -1,4 +1,4 @@
-import { createRoute } from '@granite-js/react-native';
+import { createRoute, IOScrollView } from '@granite-js/react-native';
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -13,6 +13,7 @@ import { useFullScreenAd } from '../hooks/useFullScreenAd';
 import { BingsuDisplay, type BingsuState } from '../components/BingsuDisplay';
 import { StepBar } from '../components/StepBar';
 import { SyrupDrops } from '../components/SyrupDrops';
+import { BannerAd } from '../components/BannerAd';
 import { BOWL_ILLUSTRATION_BG } from '../constants/bingsus';
 import { STEPS_PER_STAGE } from '../constants/gameConfig';
 
@@ -71,7 +72,7 @@ function ToppingUpScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.content}>
+      <IOScrollView contentContainerStyle={styles.content}>
         <View style={styles.bingsuWrap}>
           <BingsuDisplay type={bingsu.type} state={visualState} size={200} />
           <SyrupDrops type={bingsu.type} count={12} fallHeight={260} />
@@ -93,7 +94,9 @@ function ToppingUpScreen() {
         >
           <Text style={styles.actionButtonText}>{buttonLabel}</Text>
         </TouchableOpacity>
-      </View>
+
+        <BannerAd />
+      </IOScrollView>
     </SafeAreaView>
   );
 }
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: BOWL_ILLUSTRATION_BG,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
     gap: 24,
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     marginTop: 'auto',
-    marginBottom: 56,
+    marginBottom: 8,
   },
   btnDisabled: {
     backgroundColor: '#B0E5F5',
