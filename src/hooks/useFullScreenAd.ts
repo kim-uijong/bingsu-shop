@@ -55,6 +55,8 @@ function loadAdAsync(adGroupId: string): Promise<void> {
 function showAdAsync(adGroupId: string): Promise<'dismissed' | 'failed'> {
   return new Promise((resolve) => {
     let settled = false;
+    // 광고가 실제로 화면에 표시됐는지(show/impression). 노출 없이 dismissed면 '안 본 광고'.
+    let displayed = false;
     let unregister: (() => void) | undefined;
     const finish = (v: 'dismissed' | 'failed') => {
       if (settled) return;
@@ -71,8 +73,16 @@ function showAdAsync(adGroupId: string): Promise<'dismissed' | 'failed'> {
       unregister = showFullScreenAd({
         options: { adGroupId },
         onEvent: (e) => {
-          if (e.type === 'dismissed') finish('dismissed');
-          else if (e.type === 'failedToShow') finish('failed');
+          // 이벤트 흐름: requested → show → impression → dismissed
+          if (e.type === 'show' || e.type === 'impression') {
+            displayed = true;
+          } else if (e.type === 'dismissed') {
+            // 실제로 노출된 광고를 닫았을 때만 성공(단계 진행). 노출 없이 dismissed면
+            // no-fill/표시 실패로 보고 'failed' → 광고 안 보고 단계가 오르는 버그 방지.
+            finish(displayed ? 'dismissed' : 'failed');
+          } else if (e.type === 'failedToShow') {
+            finish('failed');
+          }
         },
         onError: () => finish('failed'),
       });
