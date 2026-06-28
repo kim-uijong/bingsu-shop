@@ -4,9 +4,9 @@ import { type BingsuTier } from './bingsus';
 export const DAILY_GIFT_AMOUNT = 1;
 
 // 빙수 티어별 보상 분포
-// 2026-06-07 전체 기댓값 6.5 → 8원으로 상향(사용자 요청). 티어 확률(60/25/10/5)은 유지.
-//   classic ≈ 5.37 / fruit ≈ 6.85 / premium ≈ 16.2 / special ≈ 28.5
-//   전체 = 0.6×5.37 + 0.25×6.85 + 0.10×16.2 + 0.05×28.5 ≈ 8.0원
+// 2026-06-11 eCPM 하락(1,500→800)으로 전체 기댓값 8 → 6.5원으로 하향. 티어 확률(60/25/10/5)은 유지.
+//   classic ≈ 3.92 / fruit ≈ 4.99 / premium ≈ 15.66 / special ≈ 27.23
+//   전체 = 0.6×3.92 + 0.25×4.99 + 0.10×15.66 + 0.05×27.23 ≈ 6.52원
 //   premium 최소 15원 / special 최소 25원 유지. special 301~1,000원 잭팟 0.1%(≈1/20,000) 유지.
 // 가중치는 % × 100 (정수 유지), 각 티어 합 10000.
 export interface RewardRange {
@@ -16,35 +16,35 @@ export interface RewardRange {
 }
 
 export const TIER_REWARD_DISTRIBUTIONS: Record<BingsuTier, RewardRange[]> = {
-  // 추억 빙수 (기댓값 ≈ 5.37원) — 2원 비중↓, 중상위 보상↑
+  // 추억 빙수 (기댓값 ≈ 3.92원) — 저액 비중↑
   classic: [
-    { min: 2,  max: 2,  weight: 2900 }, // 29%
-    { min: 3,  max: 3,  weight: 2200 }, // 22%
-    { min: 4,  max: 5,  weight: 2400 }, // 24%
-    { min: 6,  max: 12, weight: 1700 }, // 17%
-    { min: 13, max: 25, weight: 800  }, // 8%
+    { min: 2,  max: 2,  weight: 4000 }, // 40%
+    { min: 3,  max: 3,  weight: 2500 }, // 25%
+    { min: 4,  max: 5,  weight: 2100 }, // 21%
+    { min: 6,  max: 10, weight: 1100 }, // 11%
+    { min: 11, max: 25, weight: 300  }, // 3%
   ],
-  // 과일 빙수 (기댓값 ≈ 6.85원)
+  // 과일 빙수 (기댓값 ≈ 4.99원)
   fruit: [
-    { min: 3,  max: 3,  weight: 3800 }, // 38%
-    { min: 4,  max: 5,  weight: 3000 }, // 30%
-    { min: 6,  max: 10, weight: 2000 }, // 20%
-    { min: 11, max: 25, weight: 900  }, // 9%
-    { min: 26, max: 50, weight: 300  }, // 3%
+    { min: 3,  max: 3,  weight: 5800 }, // 58%
+    { min: 4,  max: 5,  weight: 2600 }, // 26%
+    { min: 6,  max: 10, weight: 1100 }, // 11%
+    { min: 11, max: 25, weight: 350  }, // 3.5%
+    { min: 26, max: 50, weight: 150  }, // 1.5%
   ],
-  // 프리미엄 빙수 (기댓값 ≈ 16.2원, 최소 15원 보장)
+  // 프리미엄 빙수 (기댓값 ≈ 15.66원, 최소 15원 보장)
   premium: [
-    { min: 15, max: 15,  weight: 8200 }, // 82%
-    { min: 16, max: 18,  weight: 1400 }, // 14%
-    { min: 19, max: 32,  weight: 320  }, // 3.2%
-    { min: 33, max: 150, weight: 80   }, // 0.8%
+    { min: 15, max: 15,  weight: 9000 }, // 90%
+    { min: 16, max: 18,  weight: 850  }, // 8.5%
+    { min: 19, max: 32,  weight: 100  }, // 1%
+    { min: 33, max: 150, weight: 50   }, // 0.5%
   ],
-  // 특별 빙수 (기댓값 ≈ 28.5원, 최소 25원 보장, 1,000원 잭팟 포함)
+  // 특별 빙수 (기댓값 ≈ 27.23원, 최소 25원 보장, 1,000원 잭팟 포함)
   special: [
-    { min: 25,  max: 26,   weight: 8500 }, // 85%
-    { min: 27,  max: 38,   weight: 1200 }, // 12%
-    { min: 39,  max: 80,   weight: 250  }, // 2.5%
-    { min: 81,  max: 300,  weight: 40   }, // 0.4%
+    { min: 25,  max: 26,   weight: 9400 }, // 94%
+    { min: 27,  max: 38,   weight: 480  }, // 4.8%
+    { min: 39,  max: 80,   weight: 80   }, // 0.8%
+    { min: 81,  max: 300,  weight: 30   }, // 0.3%
     { min: 301, max: 1000, weight: 10   }, // 0.1% 🎰 잭팟 (최대 1,000원)
   ],
 };
