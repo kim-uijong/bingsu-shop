@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { getServerTime } from '@apps-in-toss/framework';
 import { type BingsuType, type BingsuTier } from '../constants/bingsus';
 import { STEPS_PER_STAGE } from '../constants/gameConfig';
+import { DAILY_GIFT_LIMIT } from '../constants/probabilities';
 import { loadPersistedState, savePersistedState } from '../storage/userState';
 import { formatDateKST } from '../utils/dateUtils';
 
@@ -18,7 +19,8 @@ export interface CurrentBingsu {
 }
 
 export interface GameState {
-  todayGiftClaimed: boolean;
+  todayGiftCount: number;   // 오늘 출석 선물 받은 횟수 (0~5)
+  lastGiftTime: number;     // 마지막 출석 시각(ms, 로컬) — 2시간 쿨타임용
   todayBingsuCount: number;
   currentStage: Stage;
   currentStageStep: number;
@@ -36,7 +38,8 @@ export interface GameState {
 }
 
 const INITIAL_STATE: GameState = {
-  todayGiftClaimed: false,
+  todayGiftCount: 0,
+  lastGiftTime: 0,
   todayBingsuCount: 0,
   currentStage: 'idle',
   currentStageStep: 0,
@@ -52,7 +55,7 @@ const INITIAL_STATE: GameState = {
 function resetDailyFields(state: GameState, today: string): GameState {
   return {
     ...state,
-    todayGiftClaimed: false,
+    todayGiftCount: 0,
     todayBingsuCount: 0,
     currentStage: 'idle',
     currentStageStep: 0,
@@ -137,13 +140,17 @@ export function useGameState() {
   }, [state]);
 
   const claimDailyGift = useCallback((amount: number) => {
-    setState(prev => ({
-      ...prev,
-      todayGiftClaimed: true,
-      todayTotalPoints: prev.todayTotalPoints + amount,
-      lifetimeMaxReward: Math.max(prev.lifetimeMaxReward, amount),
-      lifetimeTotalPoints: prev.lifetimeTotalPoints + amount,
-    }));
+    setState(prev => {
+      if (prev.todayGiftCount >= DAILY_GIFT_LIMIT) return prev;
+      return {
+        ...prev,
+        todayGiftCount: prev.todayGiftCount + 1,
+        lastGiftTime: Date.now(),
+        todayTotalPoints: prev.todayTotalPoints + amount,
+        lifetimeMaxReward: Math.max(prev.lifetimeMaxReward, amount),
+        lifetimeTotalPoints: prev.lifetimeTotalPoints + amount,
+      };
+    });
   }, []);
 
   const startBingsu = useCallback((bingsu: CurrentBingsu) => {

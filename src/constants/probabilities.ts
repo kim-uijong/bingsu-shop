@@ -2,6 +2,8 @@ import { type BingsuTier } from './bingsus';
 
 // 출석 선물은 1원 고정 (앱인토스 정책상 랜덤 보상 불가)
 export const DAILY_GIFT_AMOUNT = 1;
+export const DAILY_GIFT_LIMIT = 5;                  // 하루 출석 선물 횟수
+export const GIFT_COOLDOWN_MS = 2 * 60 * 60 * 1000; // 출석 사이 쿨타임 2시간(페이싱·리텐션)
 
 // 빙수 티어별 보상 분포
 // 2026-06-11 eCPM 하락(1,500→800)으로 전체 기댓값 8 → 6.5원으로 하향. 티어 확률(60/25/10/5)은 유지.

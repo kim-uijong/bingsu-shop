@@ -13,6 +13,7 @@ import { DailyGiftCard } from '../components/DailyGiftCard';
 import { IntroModal } from '../components/IntroModal';
 import { BannerAd } from '../components/BannerAd';
 import { BG_DEFAULT } from '../constants/bingsus';
+import { DAILY_GIFT_LIMIT, GIFT_COOLDOWN_MS } from '../constants/probabilities';
 
 export const Route = createRoute('/', {
   component: MainScreen,
@@ -25,6 +26,17 @@ function MainScreen() {
   const { state, isFirstLaunch, dismissIntro } = useGame();
 
   const isDailyComplete = state.todayBingsuCount >= MAX_BINGSU;
+
+  // 출석 선물 상태 (하루 5회 · 2시간 쿨타임)
+  const giftDone = state.todayGiftCount >= DAILY_GIFT_LIMIT;
+  const giftCooldown = !giftDone && Date.now() - state.lastGiftTime < GIFT_COOLDOWN_MS;
+  const giftAvailable = !giftDone && !giftCooldown;
+  const giftLeft = DAILY_GIFT_LIMIT - state.todayGiftCount;
+  const giftSubtitle = giftDone
+    ? '오늘 다 받았어요 · 내일 또 만나요'
+    : giftCooldown
+      ? `잠시 후 다시 받아요 · 오늘 ${giftLeft}번 남음`
+      : `광고 보고 1원 · 오늘 ${giftLeft}번 받을 수 있어요`;
 
   function handleDailyGift() {
     // 전체화면 출석 선물 라우트로 이동.
@@ -62,7 +74,7 @@ function MainScreen() {
           <Text style={styles.policyLinkText}>이용 안내 · 고객센터</Text>
         </TouchableOpacity>
 
-        <DailyGiftCard claimed={state.todayGiftClaimed} onPress={handleDailyGift} />
+        <DailyGiftCard available={giftAvailable} subtitle={giftSubtitle} onPress={handleDailyGift} />
 
         <View style={styles.centerSection}>
           <Text style={styles.todayLabel}>🍧 오늘의 빙수는?</Text>

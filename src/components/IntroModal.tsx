@@ -23,7 +23,7 @@ export function IntroModal({ visible, onClose }: Props) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>🎁 출석 선물</Text>
-              <Text style={styles.sectionBody}>매일 한번 광고를 보고 포인트 받아요</Text>
+              <Text style={styles.sectionBody}>광고를 보고 포인트 받아요 (하루 5번·2시간 간격)</Text>
             </View>
 
             <View style={styles.section}>
@@ -52,7 +52,7 @@ export function IntroModal({ visible, onClose }: Props) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>📅 하루 한정</Text>
-              <Text style={styles.sectionBody}>하루 빙수 10그릇 + 출석 선물 1번</Text>
+              <Text style={styles.sectionBody}>하루 빙수 10그릇 + 출석 선물 5번</Text>
             </View>
           </ScrollView>
 

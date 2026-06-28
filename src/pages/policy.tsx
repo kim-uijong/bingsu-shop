@@ -50,7 +50,7 @@ function PolicyScreen() {
         </Section>
 
         <Section title="💰 보상 안내">
-          <Bullet>매일 출석 선물 1번 + 빙수 10그릇까지 받을 수 있어요</Bullet>
+          <Bullet>매일 출석 선물 5번(2시간 간격) + 빙수 10그릇까지 받을 수 있어요</Bullet>
           <Bullet>광고 1번당 1그릇씩 진행되며, 광고 10번에 1그릇 완성돼요</Bullet>
           <Bullet>0원 보상은 절대 발생하지 않아요</Bullet>
           <Bullet>받은 토스 포인트는 토스 앱에서 확인할 수 있어요</Bullet>

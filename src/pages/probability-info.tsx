@@ -59,7 +59,7 @@ function ProbabilityInfoScreen() {
 
         {/* 출석 선물 */}
         <Section title="🎁 출석 선물">
-          <Text style={styles.body}>매일 한번 광고를 보고 포인트 받아요</Text>
+          <Text style={styles.body}>광고를 보고 포인트 받아요 (하루 5번 · 2시간 간격)</Text>
         </Section>
 
         {/* 빙수 만드는 방법 */}
@@ -70,7 +70,7 @@ function ProbabilityInfoScreen() {
             <Text style={styles.stepText}>2단계 · 토핑 올리기 (광고 5번)</Text>
           </View>
           <Text style={styles.body}>
-            하루 최대 10그릇 + 출석 선물 1번까지 받을 수 있어요
+            하루 최대 10그릇 + 출석 선물 5번까지 받을 수 있어요
           </Text>
         </Section>
 
